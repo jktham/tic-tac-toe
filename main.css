@@ -1,0 +1,24 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    user-select: none;
+}
+.board {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 400px;
+    margin: auto;
+}
+.board_row {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+.board_cell {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    border: 1px black solid;
+}
