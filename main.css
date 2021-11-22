@@ -8,20 +8,20 @@
     text-align: center;
 }
 .setup {
-    width: 50%;
+    max-width: 400px;
     margin: 30px auto;
     border: 1px black solid;
     border-radius: 20px;
 }
 .setup-title {
     display:block;
-    margin: 10px 5%;
+    margin: 10px 20px;
     font-size: 16px;
 }
 .setup-input { 
     display: block;
     width: 90%;
-    margin: 10px auto;
+    margin: 10px calc(5% - 4px);
 }
 .setup-button {
     display: block;
