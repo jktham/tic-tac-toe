@@ -141,6 +141,7 @@ const gameController = (() => {
                     endGame();
                 } else if (boardController.checkStalemate()) {
                     status_text.innerHTML = "Stalemate";
+                    endGame();
                 } else {
                     gameController.togglePlayer();
                 }
