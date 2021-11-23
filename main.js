@@ -57,7 +57,7 @@ const boardController = (() => {
                 }
             }
         }
-        if (str.match("^(?:[12]..[12]..[12]..|.[12]..[12]..[12].|..[12]..[12]..[12]|[12][12][12]......|...[12][12][12]...|......[12][12][12]|[12]...[12]...[12]|..[12].[12].[12]..)$")) {
+        if (str.match("^(?:1..1..1..|.1..1..1.|..1..1..1|111......|...111...|......111|1...1...1|..1.1.1..)$") || str.match("^(?:2..2..2..|.2..2..2.|..2..2..2|222......|...222...|......222|2...2...2|..2.2.2..)$")) {
             return true;
         }
     
@@ -92,10 +92,12 @@ const gameController = (() => {
     const player2_name = document.querySelector("#player2-name");
     const player2_symbol = document.querySelector("#player2-symbol");
     const status_text = document.querySelector("#status-text");
+    const restart_button = document.querySelector("#restart-button");
 
     let player;
     let player1;
     let player2;
+    let allowInput;
 
     const startGame = () => {
         if (player1_name.value && player1_symbol.value && player2_name.value && player2_symbol.value) {
@@ -103,11 +105,20 @@ const gameController = (() => {
             player2 = Player(player2_name.value, player2_symbol.value, 2);
             togglePlayer();
             boardController.createBoard();
+            allowInput = true;
         }
     };
 
+    const restartGame = () => {
+        togglePlayer();
+        boardController.clearBoard();
+        restart_button.style.display = "none";
+        allowInput = true;
+    };
+
     const endGame = () => {
-        
+        restart_button.style.display = "block";
+        allowInput = false;
     };
 
     const togglePlayer = () => {
@@ -120,21 +131,25 @@ const gameController = (() => {
     };
     
     const clickedCell = (e) => {
-        if (boardController.checkLegal(e.target.dataset.x, e.target.dataset.y)) {
-            boardController.setCell(e.target, player);
+        if (allowInput) {
+            if (boardController.checkLegal(e.target.dataset.x, e.target.dataset.y)) {
+                boardController.setCell(e.target, player);
 
-            if (boardController.checkWin()) {
-                status_text.innerHTML = player.getName() + "won!";
-                endGame();
-            } else if (boardController.checkStalemate()) {
-                status_text.innerHTML = "Stalemate";
-            } else {
-                gameController.togglePlayer();
+                if (boardController.checkWin()) {
+                    player.addPoints(1);
+                    status_text.innerHTML = player.getName() + " wins!<br>" + player1.getPoints() + ":" + player2.getPoints();
+                    endGame();
+                } else if (boardController.checkStalemate()) {
+                    status_text.innerHTML = "Stalemate";
+                } else {
+                    gameController.togglePlayer();
+                }
             }
         }
     };
 
     start_button.addEventListener("click", startGame);
+    restart_button.addEventListener("click", restartGame);
 
     return {
         startGame,

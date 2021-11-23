@@ -23,7 +23,7 @@
     width: 90%;
     margin: 10px calc(5% - 4px);
 }
-.setup-button {
+#start-button {
     display: block;
     width: 100px;
     margin: 10px auto;
@@ -51,12 +51,14 @@
     font-size: 60px;
     border: 1px black solid;
 }
-.status {
-    width: 400px;
-    height: 200px;
-    margin: auto;
-}
 #status-text {
+    width: 400px;
+    margin: auto;
     font-size: 20px;
     text-align: center;
+}
+#restart-button {
+    display: none;
+    width: 100px;
+    margin: 10px auto;
 }
