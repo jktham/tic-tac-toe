@@ -140,7 +140,7 @@ const gameController = (() => {
                     status_text.innerHTML = player.getName() + " wins!<br>" + player1.getPoints() + ":" + player2.getPoints();
                     endGame();
                 } else if (boardController.checkStalemate()) {
-                    status_text.innerHTML = "Stalemate";
+                    status_text.innerHTML = "Stalemate<br>" + player1.getPoints() + ":" + player2.getPoints();
                     endGame();
                 } else {
                     gameController.togglePlayer();
