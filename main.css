@@ -28,6 +28,9 @@
     width: 100px;
     margin: 10px auto;
 }
+.main {
+    display: none;
+}
 .board {
     display: flex;
     flex-direction: column;
@@ -47,4 +50,13 @@
     align-items: center;
     font-size: 60px;
     border: 1px black solid;
+}
+.status {
+    width: 400px;
+    height: 200px;
+    margin: auto;
+}
+#status-text {
+    font-size: 20px;
+    text-align: center;
 }

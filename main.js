@@ -1,5 +1,5 @@
-const gameBoard = (() => {
-    const board_container = document.querySelector(".board-container");
+const boardController = (() => {
+    const main = document.querySelector(".main");
     const setup = document.querySelector(".setup");
     
     let board_state;
@@ -7,9 +7,10 @@ const gameBoard = (() => {
     const createBoard = () => {
         board_state = Array.from(Array(3), () => new Array(3));
         setup.style.display = "none";
+        main.style.display = "block";
         let board = document.createElement("div");
         board.classList.add("board");
-        board_container.appendChild(board);
+        main.prepend(board);
 
         for (let i=0; i<3; i++) {
             const board_row = document.createElement("div");
@@ -39,10 +40,47 @@ const gameBoard = (() => {
         cell.innerHTML = user.getSymbol();
     };
 
+    const checkLegal = (x, y) => {
+        if (!board_state[x][y]) {
+            return true;
+        }
+    };
+
+    const checkWin = () => {
+        let str = "";
+        for (let i=0; i<3; i++) {
+            for (let j=0; j<3; j++) {
+                if (!board_state[i][j]) {
+                    str += ".";
+                } else {
+                    str += board_state[i][j];
+                }
+            }
+        }
+        if (str.match("^(?:[12]..[12]..[12]..|.[12]..[12]..[12].|..[12]..[12]..[12]|[12][12][12]......|...[12][12][12]...|......[12][12][12]|[12]...[12]...[12]|..[12].[12].[12]..)$")) {
+            return true;
+        }
+    
+    };
+
+    const checkStalemate = () => {
+        for (let i=0; i<3; i++) {
+            for (let j=0; j<3; j++) {
+                if (!board_state[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
     return {
         createBoard,
         clearBoard,
         setCell,
+        checkLegal,
+        checkWin,
+        checkStalemate,
 
     };
 })();
@@ -53,6 +91,7 @@ const gameController = (() => {
     const player1_symbol = document.querySelector("#player1-symbol");
     const player2_name = document.querySelector("#player2-name");
     const player2_symbol = document.querySelector("#player2-symbol");
+    const status_text = document.querySelector("#status-text");
 
     let player;
     let player1;
@@ -62,9 +101,13 @@ const gameController = (() => {
         if (player1_name.value && player1_symbol.value && player2_name.value && player2_symbol.value) {
             player1 = Player(player1_name.value, player1_symbol.value, 1);
             player2 = Player(player2_name.value, player2_symbol.value, 2);
-            player = player1;
-            gameBoard.createBoard();
+            togglePlayer();
+            boardController.createBoard();
         }
+    };
+
+    const endGame = () => {
+        
     };
 
     const togglePlayer = () => {
@@ -73,11 +116,22 @@ const gameController = (() => {
         } else {
             player = player2;
         }
+        status_text.innerHTML = player.getName() + "<br>" + player.getSymbol();
     };
     
     const clickedCell = (e) => {
-        gameBoard.setCell(e.target, player);
-        gameController.togglePlayer();
+        if (boardController.checkLegal(e.target.dataset.x, e.target.dataset.y)) {
+            boardController.setCell(e.target, player);
+
+            if (boardController.checkWin()) {
+                status_text.innerHTML = player.getName() + "won!";
+                endGame();
+            } else if (boardController.checkStalemate()) {
+                status_text.innerHTML = "Stalemate";
+            } else {
+                gameController.togglePlayer();
+            }
+        }
     };
 
     start_button.addEventListener("click", startGame);
